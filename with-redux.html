@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--redux cdn 코드를 복사 붙여넣기하여 리덕스를 가져온다-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.js"></script>
+    </head>
+    <body>
+        <style>
+            .container {
+                border:5px solid black;
+                padding:10px;
+            }
+        </style>
+        <div id="red"></div>
+        <div id="blue"></div>
+        <div id="green"></div>
+        <script>
+            //reducer 함수 생성
+            function reducer(state, action){
+                console.log(state,action);
+                if(state === undefined){
+                    return {color:'yellow'}
+                }
+                var newState;
+                if(action.type === 'CHANGE-COLOR'){
+                    //state를 복제하고, 복제한 객체의 color를 red로 변경한다
+                    newState = Object.assign({}, state, {color:action.color})
+                }
+                return newState;
+            }
+            // createStore로 store를 만들면 내부적으로 state가 생기고, 이를 가져오기 위해서는 getState를 사용한다.
+            var store = Redux.createStore(reducer);
+            //state 값이 바뀔 때마다 호출해도 되는 함수
+            function red(){
+                //store에 getState를 하여 state를 가져옴
+                var state = store.getState();
+                document.querySelector('#red').innerHTML =  `
+                    <div class="container" id="component_red" style="background-color:${state.color}" >
+                        <h1>red</h1>
+                        <input type="button" value="fire" onclick="
+                        store.dispatch({type:'CHANGE-COLOR', color:'red'});
+                        ">
+                    </div>
+                `;
+            }
+            //state값이 바뀔 때마다 red 함수가 호출된다
+            store.subscribe(red);
+            red();
+             //state 값이 바뀔 때마다 호출해도 되는 함수
+            function blue(){
+                //store에 getState를 하여 state를 가져옴
+                var state = store.getState();
+                document.querySelector('#blue').innerHTML =  `
+                    <div class="container" id="component_red" style="background-color:${state.color}" >
+                        <h1>blue</h1>
+                        <input type="button" value="fire" onclick="
+                        store.dispatch({type:'CHANGE-COLOR', color:'blue'});
+                        ">
+                    </div>
+                `;
+            }
+            //state값이 바뀔 때마다 blue 함수가 호출된다
+            store.subscribe(blue);
+            blue();
+            //state 값이 바뀔 때마다 호출해도 되는 함수
+            function green(){
+                //store에 getState를 하여 state를 가져옴
+                var state = store.getState();
+                document.querySelector('#green').innerHTML =  `
+                    <div class="container" id="component_red" style="background-color:${state.color}" >
+                        <h1>green</h1>
+                        <input type="button" value="fire" onclick="
+                        store.dispatch({type:'CHANGE-COLOR', color:'green'});
+                        ">
+                    </div>
+                `;
+            }
+            //state값이 바뀔 때마다 green 함수가 호출된다
+            store.subscribe(green);
+            green();
+        </script>
+    </body>
+</html>
