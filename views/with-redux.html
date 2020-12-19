@@ -26,10 +26,14 @@
                     //state를 복제하고, 복제한 객체의 color를 red로 변경한다
                     newState = Object.assign({}, state, {color:action.color})
                 }
+                console.log(action.type,action,state,newState);
                 return newState;
             }
             // createStore로 store를 만들면 내부적으로 state가 생기고, 이를 가져오기 위해서는 getState를 사용한다.
-            var store = Redux.createStore(reducer);
+            var store = Redux.createStore(
+                reducer,
+                window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+                );
             //state 값이 바뀔 때마다 호출해도 되는 함수
             function red(){
                 //store에 getState를 하여 state를 가져옴
