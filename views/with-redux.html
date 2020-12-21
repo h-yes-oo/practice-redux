@@ -35,7 +35,8 @@
             }
             // createStore로 store를 만들면 내부적으로 state가 생기고, 이를 가져오기 위해서는 getState를 사용한다.
             var store = Redux.createStore(
-                reducer
+                reducer,
+                window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
                 );
             //state 값이 바뀔 때마다 호출해도 되는 함수
             function red(){
