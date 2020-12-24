@@ -25,7 +25,11 @@ function TOC(){
     while(i<state.contents.length){
         liTags = liTags + `
         <li>
-            <a href="${state.contents[i].id}">
+            <a onclick="
+                event.preventDefault();
+                var action = {type: 'SELECT', id: ${state.contents[i].id}};
+                store.dispatch(action);
+            "href="${state.contents[i].id}">
                 ${state.contents[i].title}
             </a>
         </li>
@@ -58,15 +62,19 @@ function reducer(state,action){
     if(state === undefined){
         //초기값 세팅
         return {
+            selected:null,
             contents: [
                 {id:1, title: 'HTML', desc:'HTML is ...'},
                 {id:2, title: 'CSS', desc:'CSS is ...'}
             ]
         }
-    } else {
-
     }
-    return
+    var newState;
+    if(action.type === 'SELECT'){
+        newState = Object.assign({},state, {selected: action.id});
+    }
+    console.log(action, state, newState);
+    return newState;
 }
 subject();
 TOC();
