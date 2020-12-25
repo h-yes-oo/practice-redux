@@ -9,7 +9,26 @@
         <div id="control"></div>
         <div id="content"></div>
         <script>
+function reducer(state,action){
+    if(state === undefined){
+        //초기값 세팅
+        return {
+            selected:null,
+            contents: [
+                {id:1, title: 'HTML', desc:'HTML is ...'},
+                {id:2, title: 'CSS', desc:'CSS is ...'}
+            ]
+        }
+    }
+    var newState;
+    if(action.type === 'SELECT'){
+        newState = Object.assign({},state, {selected: action.id});
+    }
+    console.log(action, state, newState);
+    return newState;
+}
 var store = Redux.createStore(reducer);
+
 function subject(){
     document.querySelector('#subject').innerHTML = `
     <header>
@@ -51,35 +70,30 @@ function control(){
     `
 }
 function article(){
+    var state = store.getState();
+    var i = 0;
+    var aTitle = '';
+    var aDesc = '';
+    while(i < state.contents.length){
+        if(state.contents[i].id === state.selected){
+            aTitle = state.contents[i].title;
+            aDesc = state.contents[i].desc;
+            break;
+        }
+        i = i + 1;
+    }
     document.querySelector('#content').innerHTML = `
     <article>
-        <h2>HTML</h2>
-        HTML is ...
+        <h2>${aTitle}</h2>
+        ${aDesc}
     </article>
     `
-}
-function reducer(state,action){
-    if(state === undefined){
-        //초기값 세팅
-        return {
-            selected:null,
-            contents: [
-                {id:1, title: 'HTML', desc:'HTML is ...'},
-                {id:2, title: 'CSS', desc:'CSS is ...'}
-            ]
-        }
-    }
-    var newState;
-    if(action.type === 'SELECT'){
-        newState = Object.assign({},state, {selected: action.id});
-    }
-    console.log(action, state, newState);
-    return newState;
 }
 subject();
 TOC();
 control();
 article();
+store.subscribe(article);
         </script>
     </body>
 </html>
