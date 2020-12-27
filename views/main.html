@@ -19,12 +19,12 @@ function reducer(state,action){
                 {id:1, title: 'HTML', desc:'HTML is ...'},
                 {id:2, title: 'CSS', desc:'CSS is ...'}
             ],
-            mode:'create'
+            mode:'read'
         }
     }
     var newState;
     if(action.type === 'SELECT'){
-        newState = Object.assign({},state, {selected: action.id});
+        newState = Object.assign({},state, {selected: action.id, mode:action.mode});
     } else if(action.type === 'CREATE'){
         var newMaxId = state.max_id + 1;
         var newContents = state.contents.concat();
@@ -34,6 +34,8 @@ function reducer(state,action){
             contents: newContents,
             mode:'read'
         })
+    } else if(action.type === 'MODE'){
+        newState = {...state, mode : action.mode};
     }
     console.log(action, state, newState);
     return newState;
@@ -57,7 +59,7 @@ function TOC(){
         <li>
             <a onclick="
                 event.preventDefault();
-                var action = {type: 'SELECT', id: ${state.contents[i].id}};
+                var action = {type: 'SELECT', id: ${state.contents[i].id}, mode: 'read'};
                 store.dispatch(action);
             "href="${state.contents[i].id}">
                 ${state.contents[i].title}
@@ -75,9 +77,15 @@ function TOC(){
 function control(){
     document.querySelector('#control').innerHTML = `
     <ul>
-        <li><a onclick = "
-            event.preventDefault();
-        " href="/create">create</a></li>
+        <li>
+            <a onclick= "
+                event.preventDefault();
+                var action = {type: 'MODE', mode: 'create'};
+                store.dispatch(action);
+            " href="/create">
+                create
+            </a>
+        </li>
         <li><input type="button" value="delete"></li>
     </ul>
     `
