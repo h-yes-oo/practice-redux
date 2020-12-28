@@ -19,7 +19,7 @@ function reducer(state,action){
                 {id:1, title: 'HTML', desc:'HTML is ...'},
                 {id:2, title: 'CSS', desc:'CSS is ...'}
             ],
-            mode:'read'
+            mode:'welcome'
         }
     }
     var newState;
@@ -32,10 +32,22 @@ function reducer(state,action){
         newState = Object.assign({},state,{
             max_id:newMaxId, 
             contents: newContents,
-            mode:'read'
+            mode:'welcome'
         })
     } else if(action.type === 'MODE'){
         newState = {...state, mode : action.mode};
+    } else if(action.type === 'DELETE'){
+        var newContents = [];
+        var i = 0;
+        while(i < state.contents.length){
+            if(state.selected !== state.contents[i].id){
+                newContents.push(
+                    state.contents[i]
+                );
+            }
+            i = i + 1;
+        }
+        newState = Object.assign({},state,{contents : newContents, mode: 'welcome', selected: null});
     }
     console.log(action, state, newState);
     return newState;
@@ -86,7 +98,11 @@ function control(){
                 create
             </a>
         </li>
-        <li><input type="button" value="delete"></li>
+        <li><input onclick="
+            store.dispatch({
+                type:'DELETE'
+            });
+        "type="button" value="delete"></li>
     </ul>
     `
 }
@@ -133,6 +149,12 @@ function article(){
         <article>
             <h2>${aTitle}</h2>
             ${aDesc}
+        </article>
+        `
+    } else if(state.mode === 'welcome'){
+        document.querySelector('#content').innerHTML = `
+        <article>
+            <h2>Welcome !! </h2>
         </article>
         `
     }
